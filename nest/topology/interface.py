@@ -4,6 +4,8 @@
 """API related to interfaces in topology"""
 
 import logging
+import multiprocessing
+import time
 from nest.input_validator import input_validator
 from nest.input_validator.metric import Bandwidth, Delay, Percentage
 from nest.topology.veth_end import VethEnd
@@ -241,7 +243,7 @@ class Interface:
         """
         self._veth_end.disable_ip_dad()
 
-    def set_mode(self, mode):
+    def set_mode(self, mode,timer=0):
         """
         Changes the mode of the interface
 
@@ -249,7 +251,10 @@ class Interface:
         ----------
         mode : string
             interface mode to be set
+        timer : sec --> Number of seconds for which the code is required to be stopped.
+            delay of time (timer) after which the mode is set 
         """
+        time.sleep(timer)
         self._veth_end.set_mode(mode)
 
     def get_qdisc(self):
@@ -496,6 +501,24 @@ class Interface:
     def __repr__(self):
         classname = self.__class__.__name__
         return f"{classname}({self.name!r})"
+
+    @input_validator
+    def disable_enable_interface(self,timer1,timer2):
+        """
+        disable a network interface after 'timer1(sec)' time and 
+        enable a network interface after 'timer2(sec)' time 
+
+        Parameters
+        ----------
+        timer1: sec
+            delay of time (timer1 sec) after which the interface mode is set 'DOWN'
+        timer2: sec
+            delay of time (timer2 sec) after which the interface mode is set 'UP'
+        """
+        disable_process=multiprocessing.Process(target=self.set_mode,args=['DOWN',timer1])
+        enable_process=multiprocessing.Process(target=self.set_mode,args=['UP',timer2])
+        disable_process.start()
+        enable_process.start()        
 
 
 def create_veth_pair(interface1_name, interface2_name):
