@@ -252,7 +252,7 @@ class Interface:
         mode : string
             interface mode to be set
         timer : sec --> Number of seconds for which the code is required to be stopped.
-            delay of time (timer) after which the mode is set 
+            time (timer) after which the mode is set 
         """
         time.sleep(timer)
         self._veth_end.set_mode(mode)
@@ -503,17 +503,16 @@ class Interface:
         return f"{classname}({self.name!r})"
 
     @input_validator
-    def disable_enable_interface(self,timer1,timer2):
+    def disable_interface(self,timer1,timer2):
         """
-        disable a network interface after 'timer1(sec)' time and 
-        enable a network interface after 'timer2(sec)' time 
+        disable a network interface from 'timer1' sec to 'timer2' sec.
 
         Parameters
         ----------
         timer1: sec
-            delay of time (timer1 sec) after which the interface mode is set 'DOWN'
+            time (timer1 sec) after which the interface mode is set 'DOWN'
         timer2: sec
-            delay of time (timer2 sec) after which the interface mode is set 'UP'
+            time (timer2 sec) after which the interface mode is set 'UP'
         """
         disable_process=multiprocessing.Process(target=self.set_mode,args=['DOWN',timer1])
         enable_process=multiprocessing.Process(target=self.set_mode,args=['UP',timer2])
