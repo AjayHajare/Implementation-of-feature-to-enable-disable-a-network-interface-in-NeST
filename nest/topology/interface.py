@@ -545,6 +545,42 @@ class Interface:
         enable_process.start()
         disable_process.start()
 
+    @input_validator
+    def toggle(self, timer1 , timer2, interval ):
+
+        """
+        API to toggle a network interface from 'timer1' sec to 'timer2' sec 
+        after every 'interval' sec
+
+        Parameters
+        ----------
+        timer1 : sec
+            toggle API start time 
+        timer2 : sec
+            toggle API end time
+        interval : sec
+            after every 'interval' sec the network interface mode is 
+            toggled [set 'UP' or 'DOWN']  between 'timer1' sec to 'timer2' sec
+        """
+        def toggle_helper():
+            isModeSet=True
+            timeout = time.time() + timer2
+            time.sleep(timer1)
+            
+            while time.time() < timeout:
+                
+                if isModeSet==True:
+                    self.set_mode('DOWN', interval)
+                    isModeSet=False
+                elif isModeSet==False:
+                    self.set_mode('UP', interval)
+                    isModeSet=True
+
+            if time.time() >= timeout:
+                self.set_mode('UP')
+
+        toggle_process=multiprocessing.Process(target=toggle_helper, args=[])
+        toggle_process.start()
 
 def create_veth_pair(interface1_name, interface2_name):
     """
