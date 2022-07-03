@@ -9,4 +9,6 @@ The paper introducing NeST is available at :- https://dl.acm.org/doi/abs/10.1145
 
 This repository contains an implementation of APIs that allow the NeST user to dynamically put "DOWN" network interface (veth i.e virtual ethernet) for some period of time and set it "UP" again after some period of time in the network.  
 
-The same above implementaion can be found at gitlab :-https://gitlab.com/Chaitanya_Samal/nest 
+The same above implementaion can be found at gitlab :- https://gitlab.com/Chaitanya_Samal/nest 
+
+The Merge Request in gitlab can be found at :- https://gitlab.com/nitk-nest/nest/-/merge_requests/254
